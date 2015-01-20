@@ -6,7 +6,6 @@ hierarchal task network AI algorithm -- with plenty of pop culture snark.
 
 Utilizes Nau's pyhop hierarchal task network planner algorithm and a lot 
 of spaghetti-coding. 
-
 """
 def battery_loss(length_of_line, decay_rate):
 	"""
@@ -21,75 +20,55 @@ def register_for_event(state,a,x):
 	Seeking a chance to get his copy of Wired for War signed, Ah-nuld 
 	registers online. 
 	"""
-	state.problem_state['registered_for_pw_singer_talk'] = x
+	state.problem_state['at_new_america_foundation'] = x
 	return state 
 
-def take_metro(state,a,x):
-	"""
-	Ah-nuld gets on the metro, terrifying Cherry Blossom Festival 
-	tourists and causing them to drop their selfie sticks.
-	"""
-	if state.problem_state['registered_for_pw_singer_talk'] == x and state.problem_state[a]== x:
-		state.problem_state['at_new_america_foundation'] = x
-		return state 
-	else: return False 
-
-def wait_for_singer(state,a,x,y):
+def wait_for_singer(state,a,x):
 	"""
 	Ah-nuld gets to the New America Foundation and plants himself awkwardly 
 	in a chair. After the talk is over, he calculates the expected battery 
 	loss from waiting in line to talk to Singer. 
 	"""
 	if state.problem_state['at_new_america_foundation'] == x and state.problem_state[a]== x:
-		state.problem_state['at_new_america_foundation'] = y 
-		state.problem_state[a] = y
-		state.required_battery_expenditure[a] = battery_loss(state.length_of_line[x][y], state.battery_decay_rate)
+		state.problem_state['waiting_for_singer'] = x
 		return state 
 	else: return False 
 
-def ask_for_autograph(state, a):
+def ask_for_autograph(state, a, x):
 	"""
 	If Ah-nuld has enough battery power, he can wait until 
 	Singer is not occupied and politely ask for an autograph. 
 	"""
-	if state.battery_power[a] > state.required_battery_expenditure[a]:
-		state.battery_power[a] = state.battery_power[a] - state.required_battery_expenditure[a]
-		state.required_battery_expenditure[a] = 0 
+	if state.problem_state['waiting_for_singer'] == x and state.problem_state[a] == x: 
+		state.problem_state['ask_for_autograph'] = x
 		return state 
 	else: return False 
 
-
-def ah_nuld_running_low(state,a,x,y):
-	if state.problem_state['at_new_america_foundation'] == x and state.problem_state[a]== x:
-		state.problem_state['at_new_america_foundation'] = y 
-		state.problem_state[a] = y
-		state.required_battery_expenditure[a] = battery_loss(state.length_of_line[x][y], state.battery_decay_rate)
-		return state 
-	else: return False 
-
-def play_terminator_music(state, a):
+def play_terminator_music(state, a, x):
 	"""
 	If Ah-nuld has enough battery power, he can wait until 
 	Singer is not occupied and politely ask for an autograph. 
 	"""
-	if state.battery_power[a] < state.required_battery_expenditure[a]:
-		state.battery_power[a] = state.battery_power[a] - state.required_battery_expenditure[a]
-		state.required_battery_expenditure[a] = 0 
+	if state.problem_state['waiting_for_singer'] == x and state.problem_state[a] == x: 
+		state.problem_state['play teh terminator music'] = x
 		return state 
 	else: return False 
-	
-pyhop.declare_operators(register_for_event, take_metro, wait_for_singer, ask_for_autograph, ah_nuld_running_low, play_terminator_music)
+
+def thank_singer_for_autograph(state,a):
+	return state 
+
+pyhop.declare_operators(register_for_event, wait_for_singer, ask_for_autograph, play_terminator_music, thank_singer_for_autograph)
 print('')
 pyhop.print_operators()
 
 def get_autograph_politely(state,a,x,y):
 	if state.battery_power[a] > battery_loss(state.length_of_line[x][y], state.battery_decay_rate): 
-		return [('register_for_event',a,x),('take_metro',a,x),('wait_for_singer',a,x,y),('ask_for_autograph',a)]
+		return [('register_for_event',a,x),('wait_for_singer',a,x),('ask_for_autograph',a,x),('thank_singer_for_autograph',a)]
 	return False 
 	
 def hasta_la_vista_baby(state,a,x,y):
 	if state.battery_power[a] < battery_loss(state.length_of_line[x][y], state.battery_decay_rate): 
-		return [('register_for_event',a,x),('take_metro',a,x), ('ah_nuld_running_low', a,x,y),('play_terminator_music',a)]
+		return [('register_for_event',a,x),('wait_for_singer',a,x),('play_terminator_music',a,x),('thank_singer_for_autograph',a)]
 	return False 
 
 pyhop.declare_methods('get_autograph', get_autograph_politely, hasta_la_vista_baby)
@@ -127,7 +106,7 @@ to bypass the line and collect his autograph.
 
 You can determine Ah-nuld's choices by specifying his max battery power, the 
 number of people in front of him in line, and the rate at which his battery 
-decays. Just remember, he'll be back -- even the DC metro can't stop him.
+decays. 
 """) 
 
 print("""
