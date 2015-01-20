@@ -21,8 +21,7 @@ That's both something interesting -- a substitute for Lisp and Prolog-style prog
 
 As high-minded as this may sound, the most fun I got out of it was imagining a scenario in which Ah-nuld is out to get P.W. Singer to sign a personal copy of *Wired for War*. It provided an opportunity to implement some simple methods for decomposing Ah-nuld's decision-making into sequences that accomplished his goal. I've implemented some basic command line input and a hefty intro screen that documents the scenario and its various inputs. 
 
-All output will be returned as a sequence of plan operators. For ex, Nau's original example has the sequence `result = [('call_taxi', 'me', 'home'), ('ride_taxi', 'me', 'home', 'park'), ('pay_driver', 'me')]`. 
-
+All output will be returned as a sequence of plan operators. For ex, Nau's original example has the sequence `result = [('call_taxi', 'me', 'home'), ('ride_taxi', 'me', 'home', 'park'), ('pay_driver', 'me')]`. Run the file `htn_test.py` to begin the process, but make sure that the original `pyhop` file is in the same directory. 
 
 
 
