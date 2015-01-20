@@ -26,8 +26,7 @@ def register_for_event(state,a,x):
 def wait_for_singer(state,a,x):
 	"""
 	Ah-nuld gets to the New America Foundation and plants himself awkwardly 
-	in a chair. After the talk is over, he calculates the expected battery 
-	loss from waiting in line to talk to Singer. 
+	in a chair.  
 	"""
 	if state.problem_state['at_new_america_foundation'] == x and state.problem_state[a]== x:
 		state.problem_state['waiting_for_singer'] = x
@@ -46,8 +45,8 @@ def ask_for_autograph(state, a, x):
 
 def play_terminator_music(state, a, x):
 	"""
-	If Ah-nuld has enough battery power, he can wait until 
-	Singer is not occupied and politely ask for an autograph. 
+	Time's up. Ah-nuld plays the 'da dum dum dum' Terminator theme from his 
+	onboard speakers to clear a path for his autograph.
 	"""
 	if state.problem_state['waiting_for_singer'] == x and state.problem_state[a] == x: 
 		state.problem_state['play teh terminator music'] = x
@@ -55,11 +54,17 @@ def play_terminator_music(state, a, x):
 	else: return False 
 
 def thank_singer_for_autograph(state,a):
+	"""
+	Ah-nuld is, if anything, unfailingly polite. 
+	"""
 	return state 
 
+# all primitive operators 
 pyhop.declare_operators(register_for_event, wait_for_singer, ask_for_autograph, play_terminator_music, thank_singer_for_autograph)
 print('')
-pyhop.print_operators()
+pyhop.print_operators() 
+
+# all methods declared, each tied to calculation about battery loss.
 
 def get_autograph_politely(state,a,x,y):
 	if state.battery_power[a] > battery_loss(state.length_of_line[x][y], state.battery_decay_rate): 
@@ -120,7 +125,7 @@ robot_battery_power = int(input("enter int for Ah-nuld battery power: "))
 robot_battery_decay_rate = int(input("enter int for Ah-nuld battery decay rate: "))
 
 
-# initialize all inputs
+# initialize all ah-nuld inputs
 state1 = pyhop.State('state1')
 state1.problem_state = {'ah_nuld':'no_autograph'}
 state1.length_of_line = {'no_autograph':{'book_signed':line_length}, 'book_signed':{'no_autograph':line_length}}
